@@ -1,0 +1,14 @@
+# development Dockerfile - builds and runs the app via mvn spring-boot:run
+# mounting source and repository enables live reload with devtools
+FROM maven:3.9.4-eclipse-temurin-17 AS build
+WORKDIR /workspace
+
+# cache dependencies
+COPY pom.xml .
+RUN mvn -B dependency:go-offline
+
+# copy sources
+COPY src ./src
+
+# default command starts the development server; use -Dspring-boot.run.fork=false so devtools restart works
+CMD ["mvn","spring-boot:run","-Dspring-boot.run.fork=false"]
